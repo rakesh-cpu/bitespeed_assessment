@@ -8,7 +8,6 @@ const identityService = new IdentityService();
 export const identify = async (req: Request, res: Response): Promise<void> =>{
     try{
         const request:identifyRequest = req.body;
-        console.log('request:',request);
         if(!request.email && !request.phoneNumber){
             res.status(400).json({
                 error: 'Either email or phoneNumber must be provided'
@@ -20,7 +19,7 @@ export const identify = async (req: Request, res: Response): Promise<void> =>{
     }catch(error){
         console.error('Error in identify controller:',error);
         res.status(500).json({
-            error:error.message,
+            error: 'Internal Server Error',
             success:false
         })
     }

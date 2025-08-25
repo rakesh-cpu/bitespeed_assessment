@@ -46,9 +46,11 @@ export class IdentityService{
 
         const contactIds = new Set<number>();
         for(const contact of contacts){
-            contactIds.add(contact.id);
+            if (typeof contact.id === 'number') {
+                contactIds.add(contact.id);
+            }
             console.log('Found linkedId:', contact.linkedId);
-            if(contact.linkedId){
+            if (typeof contact.linkedId === 'number') {
                 contactIds.add(contact.linkedId);
             }
         }
@@ -75,7 +77,7 @@ export class IdentityService{
         const hasNewEmail = email && !contacts.some(c=>c.email === email);
         const hasNewPhone = phoneNumber && !contacts.some(c=>c.phoneNumber === phoneNumber);
 
-        return hasNewEmail || hasNewPhone;
+        return Boolean(hasNewEmail) || Boolean(hasNewPhone);
     }
 
     private async handlePrimaryContactLinking(contacts: Contact[],email?:string,phoneNumber?:string): Promise<Contact[]> {
@@ -87,16 +89,18 @@ export class IdentityService{
         const primaryContacts = contacts.filter(c => c.linkPrecedence === 'primary');
 
         if(primaryContacts.length > 1){
-            const oldestPrimary = primaryContacts.reduce((oldest,current)=>
-                current.createdAt < oldest.createdAt ? current : oldest
+            const oldestPrimary = primaryContacts.reduce((oldest, current) =>
+                (current.createdAt ?? 0) < (oldest.createdAt ?? 0) ? current : oldest
             );
 
             for(const primary of primaryContacts){
                 if(primary.id !== oldestPrimary.id){
-                    await this.convertToSecondary(primary.id,oldestPrimary.id);
-                    primary.linkedId = oldestPrimary.id;
-                    primary.linkPrecedence = 'secondary';
-                    primary.updatedAt = new Date();
+                    if (typeof primary.id === 'number' && typeof oldestPrimary.id === 'number') {
+                        await this.convertToSecondary(primary.id, oldestPrimary.id);
+                        primary.linkedId = oldestPrimary.id;
+                        primary.linkPrecedence = 'secondary';
+                        primary.updatedAt = new Date();
+                    }
                 }
             }
         }
@@ -166,10 +170,12 @@ export class IdentityService{
 
         return {
             contact:{
-                primaryContactId: primaryContact.id,
+                primaryContactId: primaryContact.id ?? 0,
                 emails,
                 phoneNumbers,
-                secondaryContactIds:secondaryContacts.map(c=>c.id)
+                secondaryContactIds: secondaryContacts
+                    .map(c => c.id)
+                    .filter((id): id is number => typeof id === 'number')
             }
         };
     }

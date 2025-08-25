@@ -1,5 +1,5 @@
-import * as express from 'express';
-import * as cors from 'cors';
+import cors from 'cors';
+import express from 'express';
 import identifyRoutes from './routes/identify';
 import * as dotenv from 'dotenv';
 import testConnection from './testdatabase';
