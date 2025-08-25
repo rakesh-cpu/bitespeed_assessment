@@ -1,0 +1,31 @@
+{
+  "name": "bitespeed",
+  "version": "1.0.0",
+  "description": "Identity reconciliation service for Bitespeed",
+  "main": "index.js",
+  "scripts": {
+    "test": "node dist/app.js",
+    "start": "nodemon src/app.ts",
+    "build": "tsc",
+    "dev": "nodemon --exec ts-node src/app.ts",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.3.0",
+    "@types/pg": "^8.15.5",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "pg": "^8.16.3"
+  }
+}
